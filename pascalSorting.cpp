@@ -16,3 +16,23 @@ int main(){
   cout << "end." << endl;
   return 0;
 }
+
+void printCases(string knownOrdering, int maxDepth){
+
+    int currentDepth = knownOrdering.length();
+    char var = depthToVar(currentDepth);
+
+    // Check for base case.
+    if(currentDepth == maxDepth){
+        string indent = string(maxDepth, "  ");
+        // Print the first if statements.
+        cout << indent << "if " << knownOrdering.at(maxDepth - 1)
+             << " < " << var << " then\n";
+        cout << indent << "  " << "writeln("
+             << makeArguments(knownOrdering, var, i) << ")\n";
+        // Print the else if statements.
+
+        // Print the else statement.
+    }
+
+}
