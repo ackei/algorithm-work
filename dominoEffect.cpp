@@ -1,6 +1,7 @@
 #include<iostream>
 #include<string>
 #include<iomanip>
+#include<utility>
 
 using namespace std;
 
@@ -79,5 +80,9 @@ void printInput(int setNo){
 
 }
 
-void findSolutions();
+void findSolutions(){
+
+}
+
+
 void printSolution();
