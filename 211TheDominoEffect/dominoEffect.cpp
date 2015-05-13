@@ -2,6 +2,7 @@
 #include<string>
 #include<iomanip>
 #include<utility>
+#include<vector>
 
 using namespace std;
 
@@ -11,18 +12,23 @@ void findSolutions();
 void printSolution();
 
 int board [7][8];
-int solution [7][8];
+bool boardAssigned [7][8];
+vector<pair<int, int>> bones;
 
 int main(){
 
     int setNo = 1;
+    // Init bones.
+    for(int i = 0; i < 7; ++i){
+        for(int j = i; j < 7; ++j){
+            bones.push_back(pair<int, int>(i, j));
+        }
+    }
 
     while(readInput()){
 
         printInput(setNo);
-
         findSolutions();
-
         ++setNo;
 
     }

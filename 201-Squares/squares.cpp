@@ -1,88 +1,91 @@
 #include<iostream>
 #include<cstdlib>
+#include<vector>
+#include<string>
 
 #define NORTH 0
 #define SOUTH 1
 #define EAST 2
 #define WEST 3
 
-bool*** graph;
 
 using namespace std;
 
-bool existsSqaure(int size, int i, int j, bool*** graph, int n);
+vector<vector<vector<bool> > > graph;
+
+bool existsSqaure(int size, int i, int j);
 
 int main(){
 
     int n, m;
     char direction;
     int x, y, countOfSize;
-    bool anySquares = false;
+    int problem = 1;
 
-    cin >> n;
-    cin >> m;
+    while(cin >> n >> m){
 
-    bool graph[n][n][4];
+        cout << endl;
+        cout << "Problem #" << problem++ << endl << endl;
 
-    graph = new bool***[n];
+        bool anySquares = false;
 
-    for(int i = 0; i < n; ++i){
-        graph[i] = new bool**[n];
-        for(int j = 0; j < n; ++j){
-            graph[i][j] = new bool[4];
-            for(int k = 0; k < 4; ++k){
-                graph[i][j][k] = false;
+        for(int i = 0; i < n; ++i){
+            vector<vector<bool> > newRow;
+            for(int j = 0; j < n; ++j){
+                vector<bool> vertex;
+                for(int k = 0; k < 4; ++k){
+                    vertex.push_back(false);
+                }
+                newRow.push_back(vertex);
             }
-        }
-    }
-
-    for(int i = 0; i < m; ++i){
-
-        cin >> direction >> x >> y;
-        switch(direction){
-            case 'H':
-                graph[x][y][EAST] = true;
-                graph[x][y+1][WEST] = true;
-                break;
-            case 'V':
-                graph[y][x][SOUTH] = true;
-                graph[y][x+1][NORTH] = true;
-                break;
+            graph.push_back(newRow);
         }
 
-    }
+        for(int i = 0; i < m; ++i){
+            cin >> direction >> x >> y;
+            switch(direction){
+                case 'H':
+                    graph[x-1][y-1][EAST] = true;
+                    graph[x-1][y][WEST] = true;
+                    break;
+                case 'V':
+                    graph[y-1][x-1][SOUTH] = true;
+                    graph[y][x-1][NORTH] = true;
+                    break;
+            }
 
-    for(int size = 1; size < n; ++size){
-        countOfSize = 0;
-        for(int i = 0; i < n - size; ++i){
-            for(int j = 0; j < n - size; ++j){
-                if(existsSqaure(size, i, j, graph, n)){
-                    ++countOfSize;
+        }
+
+        for(int size = 1; size < n; ++size){
+            countOfSize = 0;
+            for(int i = 0; i < n - size; ++i){
+                for(int j = 0; j < n - size; ++j){
+                    if(existsSqaure(size, i, j)){
+                        ++countOfSize;
+                    }
                 }
             }
+            if(countOfSize){
+                anySquares = true;
+                cout << countOfSize << " square (s) of size " << size << endl;
+            }
         }
-        if(countOfSize){
-            anySquares = true;
-            cout << countOfSize << " square (s) of size " << size << endl;
+
+        if(!anySquares){
+            cout << "No completed squares can be found." << endl;
         }
-    }
 
-    if(!anySquares){
-        cout << "No completed squares can be found." << endl;
-    }
+        cout << endl;
+        cout << "****************************************" << endl;
 
-    for(int i = 0; i < n; ++i){
-        for(int j = 0; j < n; ++j){
-            delete graph[i][j];
-        }
-        delete graph[i];
-    }
+        graph.clear();
 
+    }
 
     return 0;
 }
 
-bool existsSqaure(int size, int i, int j, bool*** graph, int n){
+bool existsSqaure(int size, int i, int j){
 
     for(int step = 0; step < size; ++step){
         if(!(graph[i][j + step][EAST] && graph[i + size][j + step][EAST])){
