@@ -19,17 +19,8 @@ int main(){
     readRoutes();
 
     for(int i = 0; i < routes.size(); ++i){
-        //cout << "Printing route: " << i << endl;
-        for(int j = 0; j < routes[i].size(); ++j){
-            //cout << routes[i][j] << ' ';
-        }
-        //cout << endl;
-    }
-
-    for(int i = 0; i < routes.size(); ++i){
 
         stops = maxSubarray(routes[i]);
-        //cout << "stops: " << stops.first << ' ' << stops.second << endl;
         totalNice = niceness(stops, routes[i]);
         if(totalNice < 0){
             cout << "Route " << i + 1 << " has no nice parts" << endl;
@@ -65,13 +56,10 @@ void readRoutes(){
         }
     }
 
-    //cout << "Exiting read readRoutes()!" << endl;
-
 }
 
 pair<int, int> maxSubarray(vector<int> array){
 
-    //cout << "array.size(): " << array.size() << endl;
     // Base case.
     if(array.size() == 1){
         return make_pair(0, 0);
@@ -88,12 +76,9 @@ pair<int, int> maxSubarray(vector<int> array){
     for(int i = 0; i < rightSize; ++i){
         right[i] = array[i + leftSize];
     }
-    ////cout << "Made it past computing the new arrays." << endl;
 
     pair<int, int> leftSolution = maxSubarray(left),
                    rightSolution = maxSubarray(right);
-
-    //cout << "Back from recursion!" << endl;
 
     int nicenessLeft = niceness(leftSolution, left),
         nicenessRight = niceness(rightSolution, right),
@@ -107,8 +92,6 @@ pair<int, int> maxSubarray(vector<int> array){
 
     rightSolution.first += left.size();
     rightSolution.second += left.size();
-
-    //cout << "Made it past computing their nicenesses!" << endl;
 
     for(int i = left.size() - 2; i >= 0; --i){
         leftSum += left[i];
@@ -126,27 +109,19 @@ pair<int, int> maxSubarray(vector<int> array){
         }
     }
 
-    //cout << "Made it past computing max across array!" << endl;
-
     pair<int, int> acrossSolution = make_pair(leftBound, rightBound + leftSize);
     nicenessAcross = rightMax + leftMax;
 
     if(better(nicenessLeft, leftSolution, nicenessRight, rightSolution) == -1){
-        //cout << "left is better than right" << endl;
         if(better(nicenessLeft, leftSolution, nicenessAcross, acrossSolution) == -1){
-            //cout << "left is better than across" << endl;
             return leftSolution;
         } else {
-            //cout << "across is better than left" << endl;
             return acrossSolution;
         }
     } else {
-        //cout << "right is better than left" << endl;
         if(better(nicenessAcross, acrossSolution, nicenessRight, rightSolution) == -1){
-            //cout << "across is better than right" << endl;
             return acrossSolution;
         } else {
-            //cout << "right is better than across" << endl;
             return rightSolution;
         }
     }
