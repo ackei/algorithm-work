@@ -7,6 +7,7 @@ using namespace std;
 
 struct lazy_def{
     int type; // 0 if zip, 1 otherwise.
+    string id;
     // Attributes for zip type definitions.
     string evenDef;
     string oddDef;
@@ -52,20 +53,29 @@ int main(){
 int eval(string def_id, int index){
 
     lazy_def def = lazy_defs[def_id];
-    if(def.type == 0){ // It is a zip.
-        if(index % 2 == 0){
-            return eval(def.evenDef, index / 2);
-        } else {
-            return eval(def.oddDef, index / 2);
-        }
-    } else {
-        if(index < def.literals.size()){
-            return def.literals[index];
-        } else {
-            if(def.restDef == def_id){
-                return eval(def.restDef, index % def.literals.size());
+
+    while(true){
+
+        if(def.type == 0){ // It is a zip.
+
+            if(index % 2 == 0){
+                def = lazy_defs[def.evenDef];
             } else {
-                return eval(def.restDef, index - def.literals.size());
+                def = lazy_defs[def.oddDef];
+            }
+            index /= 2;
+
+        } else { // It is a bunch of literals followed by a def
+
+            if(index < def.literals.size()){
+                return def.literals[index];
+            } else {
+                if(def.restDef == def.id){
+                    return def.literals[index % def.literals.size()];
+                } else {
+                    index -= def.literals.size();
+                    def = lazy_defs[def.restDef];
+                }
             }
         }
     }
@@ -81,6 +91,8 @@ void readDef(){
     cin >> name;
     cin >> peek; // Get the = sign.
     cin >> peek;
+
+    newDef.id = name;
 
     if(peek == "zip"){
         newDef.type = 0;
