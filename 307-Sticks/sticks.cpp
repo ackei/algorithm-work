@@ -113,9 +113,8 @@ bool backtrack(int partial_sum, int target,  vector<int>& choices){
 
             } else {
 
-                if(partial_sum == 0){
-                    return false;
-                }
+            	if (partial_sum == 0)
+            		return false;
 
                 while(i + 1 < choices.size() && choices[i + 1] == choice){
                     ++i;

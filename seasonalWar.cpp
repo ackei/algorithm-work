@@ -5,7 +5,7 @@
 using namespace std;
 
 void eliminateComponent(vector< vector<int> > &image, int x, int y, int size){
-	image[x][y] = 0;
+	/*image[x][y] = 0;
 	if (x > 0 && y > 0 && image[x-1][y-1])
 		eliminateComponent(image,x-1,y-1,size);
 	if (x > 0 && image[x-1][y])
@@ -21,7 +21,21 @@ void eliminateComponent(vector< vector<int> > &image, int x, int y, int size){
 	if (x < size-1 && image[x+1][y])
 		eliminateComponent(image,x+1,y,size);
 	if (x < size-1 && y < size-1 && image[x+1][y+1])
-		eliminateComponent(image,x+1,y+1,size);
+		eliminateComponent(image,x+1,y+1,size);*/
+	if (x < 0 || x > size-1 || y < 0 || y > size-1)
+		return;
+	if (!image[x][y])
+		return;
+	image[x][y] = 0;
+	eliminateComponent(image,x-1,y-1,size);
+	eliminateComponent(image,x-1,y,size);
+	eliminateComponent(image,x-1,y+1,size);
+	eliminateComponent(image,x,y-1,size);
+	eliminateComponent(image,x,y+1,size);
+	eliminateComponent(image,x+1,y-1,size);
+	eliminateComponent(image,x+1,y,size);
+	eliminateComponent(image,x+1,y+1,size);
+
 }
 
 int main(){
