@@ -20,7 +20,7 @@ map<string, lazy_def> lazy_defs;
 vector<vector<int> > tests;
 
 bool isNumber(string s);
-int eval(string def_id, int index);
+vector<int> evalRange(string def_id, int start, int end);
 void readDef();
 void doTest();
 
@@ -50,32 +50,48 @@ int main(){
 
 }
 
-int eval(string def_id, int index){
+vector<int> evalRange(string def_id, int start, int end){
 
     lazy_def def = lazy_defs[def_id];
 
-    while(true){
+    if(def.type == 0){
 
-        if(def.type == 0){ // It is a zip.
+        vector<int> evens = evalRange(def.evenDef, start / 2, end / 2);
+        vector<int> odds = evalRange(def.oddDef, start / 2, end / 2);
+        vector<int> merge;
 
-            if(index % 2 == 0){
-                def = lazy_defs[def.evenDef];
-            } else {
-                def = lazy_defs[def.oddDef];
+        int i;
+        for(i = 0; i < evens.size(); ++i){
+            merge.push_back(evens[i]);
+            if(i < odds.size()){
+                merge.push_back(odds[i]);
             }
-            index /= 2;
+        }
 
-        } else { // It is a bunch of literals followed by a def
+        if(i < odds.size()){
+            merge.push_back(odds[i]);
+        }
 
-            if(index < def.literals.size()){
-                return def.literals[index];
+        return merge;
+
+    } else {
+
+        if(start < def.literals.size() && end < def.literals.size()){
+            vector<int> seq(def.literals.begin() + start, def.literals.begin() + end);
+            return seq;
+        } else if (start < def.literals.size()){
+            cout << "start < def.literals.size()" << endl;
+            vector<int> head(def.literals.begin() + start, def.literals.end());
+            vector<int> tail = evalRange(def.restDef, 0, end - start - 1);
+            head.insert(head.end(), tail.begin(), tail.end());
+            return head;
+        } else {
+            if(def_id == def.restDef){
+                int offset = start % def.literals.size();
+                cout << "offset: " << offset << endl;
+                return evalRange(def_id, offset, offset + (end - start));
             } else {
-                if(def.restDef == def.id){
-                    return def.literals[index % def.literals.size()];
-                } else {
-                    index -= def.literals.size();
-                    def = lazy_defs[def.restDef];
-                }
+                return evalRange(def.restDef, start - def.literals.size(), end - def.literals.size());
             }
         }
     }
@@ -142,10 +158,6 @@ void doTest(){
         end;
 
     cin >> def_id >> start >> end;
-    for(int i = start; i <= end; ++i){
-        elements.push_back(eval(def_id, i));
-    }
-
-    tests.push_back(elements);
+    tests.push_back(evalRange(def_id, start, end));
 
 }
