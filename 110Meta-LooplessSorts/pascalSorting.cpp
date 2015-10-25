@@ -92,7 +92,7 @@ void printCases(string knownOrdering, int maxDepth){
  */
 string makeArguments(string knownOrdering, char var, int varRightIndex){
 
-    int varLeftIndex = 
+   // int varLeftIndex = 
 
 }
 
