@@ -1,23 +1,22 @@
 #include<cstdio>
 #include<tuple>
-#include<map>
 #include<cmath>
 #include<iostream>
+#include<algorithm>
 using namespace std;
 
-map<tuple<int, int, int>, int> memo;
-int coins[101], m;
+int coins[100], m, memo[100][100];
 
-int coin(int val_A, int val_B, int coin_no){
-    if(coin_no == m)
-        return val_A < val_B ? abs(val_B - val_A - coins[coin_no]) :
-                               abs(val_A - val_B - coins[coin_no]);
-    if(memo.count(make_tuple(val_A, val_B, coin_no)))
-        return memo[make_tuple(val_A, val_B, coin_no)];
-    int ans = 1 << 20;
-    ans = min(coin(val_A + coins[coin_no], val_B, coin_no + 1),
-              min(ans, coin(val_A, val_B + coins[coin_no], coin_no + 1)));
-    memo.insert(make_pair(make_tuple(val_A, val_B, coin_no), ans));
+int computeSplit(int i, int j){
+    if(i == j) return coins[i];
+    if(memo[i][j] != -1) return memo[i][j];
+    int i_k, k_j;
+    int &ans = memo[i][j] = 1 << 20;
+    for(int k = i; k < j; ++k){
+        i_k = computeSplit(i, k);
+        k_j = computeSplit(k+1, j);
+        if(abs(i_k - k_j) < ans) ans = abs(i_k - k_j);
+    }
     return ans;
 }
 
@@ -26,12 +25,15 @@ int main(){
     int TC, ans;
     scanf(" %d", &TC);
     while(TC--){
-        memo.clear();
+        fill(&memo[0][0], &memo[99][99], -1);
         scanf(" %d", &m);
-        coins[0] = 0;
-        for(int i = 1; i <= m; ++i) scanf(" %d", &coins[i]);
-        ans = coin(0, 0, 0);
-        printf("%d\n", ans);
+        for(int i = 0; i < m; ++i)
+            scanf(" %d", &coins[i]);
+        for(int d = 0; d < m; ++d)
+            for(int i = 0; i+d < m; ++i)
+                computeSplit(i, i+d);
+
+        printf("%d\n", m == 0 ? 0 : computeSplit(0, m-1));
     }
 
 }
