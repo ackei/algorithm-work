@@ -1,1 +1,4 @@
-*\.exe
+*.exe
+*.obj
+*.cpp~
+.DS_Store
