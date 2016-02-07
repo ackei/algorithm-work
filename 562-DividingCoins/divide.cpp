@@ -5,35 +5,34 @@
 #include<algorithm>
 using namespace std;
 
-int coins[100], m, memo[100][100];
+int coins[100], m, memo[100][100*505];
 
-int computeSplit(int i, int j){
-    if(i == j) return coins[i];
-    if(memo[i][j] != -1) return memo[i][j];
-    int i_k, k_j;
-    int &ans = memo[i][j] = 1 << 20;
-    for(int k = i; k < j; ++k){
-        i_k = computeSplit(i, k);
-        k_j = computeSplit(k+1, j);
-        if(abs(i_k - k_j) < ans) ans = abs(i_k - k_j);
-    }
+int knapsack(int i, int C){
+    if(C == 0) return 0;
+    if(i == m) return 0;
+    if(coins[i] > C) return knapsack(i+1, C);
+    if(memo[i][C] != -1) return memo[i][C];
+    int &ans = memo[i][C];
+    ans = max(knapsack(i+1, C), coins[i] + knapsack(i+1, C-coins[i]));
     return ans;
 }
 
 int main(){
 
-    int TC, ans;
+    int TC, ans, sum, sack;
     scanf(" %d", &TC);
     while(TC--){
-        fill(&memo[0][0], &memo[99][99], -1);
+        sum = 0;
         scanf(" %d", &m);
-        for(int i = 0; i < m; ++i)
+        fill(&memo[0][0], &memo[(m > 0) ? (m - 1) : 0][((m > 0) ? (m - 1) : 0)*504], -1);
+        for(int i = 0; i < m; ++i){
             scanf(" %d", &coins[i]);
-        for(int d = 0; d < m; ++d)
-            for(int i = 0; i+d < m; ++i)
-                computeSplit(i, i+d);
+            sum += coins[i];
+        }
+        sack = knapsack(0, sum / 2);
+        ans = abs(sum - 2*sack);
 
-        printf("%d\n", m == 0 ? 0 : computeSplit(0, m-1));
+        printf("%d\n", ans);
     }
 
 }
