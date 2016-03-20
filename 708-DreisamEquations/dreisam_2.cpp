@@ -3,6 +3,11 @@
 #include<iostream>
 using namespace std;
 
+bool E();
+void L();
+bool T();
+bool Ep();
+
 #define LPAREN 0
 #define RPAREN 1
 #define NUM 2
@@ -20,14 +25,9 @@ char equation[81],
      ops[11],
      *ops_ptr = ops;
 
-bool E();
-void L();
-void T();
-bool Ep();
-
 void getToken(){
 
-    cout << "entering getToken()" << endl;
+    //cout << "entering getToken()" << endl;
     while(isspace(*eq_ptr)){ ++eq_ptr;}
     if(isdigit(*eq_ptr)){
         currtoken.type = NUM;
@@ -49,12 +49,12 @@ void getToken(){
     } else if(*eq_ptr == '\0'){
         currtoken.type = EOEQ;
     }
-    cout << "currtoken type: " << currtoken.type << " value: " << currtoken.val << endl;
+    //cout << "currtoken type: " << currtoken.type << " value: " << currtoken.val << endl;
 
 }
 
 bool match(int TK_TYPE){
-    cout << "Entering match " << TK_TYPE << endl;
+    //cout << "Entering match " << TK_TYPE << endl;
     if(currtoken.type == TK_TYPE){
         if(currtoken.type != EOEQ) getToken();
         return true;
@@ -65,27 +65,27 @@ bool match(int TK_TYPE){
 }
 
 void S(){
-    cout << "Entering S" << endl;
+    //cout << "Entering S" << endl;
     getToken();
     L();
     if(E()){
         match(EOEQ);
         // Print the solution here.
-        printf("There is a solution!");
+        printf("There is a solution!\n");
     } else {
         // Print impossible here.
-        printf("Impossible!");
+        printf("Impossible!\n");
     }
 }
 
 bool E(){
-    cout << "Entering E" << endl;
+    //cout << "Entering E" << endl;
     T();
     return Ep();
 }
 
 void L(){
-    cout << "Entering L" << endl;
+    //cout << "Entering L" << endl;
     if(currtoken.type != NUM){
         printf("Error: Malformed expression.\n");
     }
@@ -94,11 +94,11 @@ void L(){
     match(EQUAL);
 }
 
-void T(){
-    cout << "Entering T" << endl;
+bool T(){
+    //cout << "Entering T" << endl;
     if(currtoken.type == LPAREN){
         match(LPAREN);
-        E();
+        return E();
         //match(RPAREN);
     } else if(currtoken.type == NUM){
         *top = currtoken.val;
@@ -107,14 +107,15 @@ void T(){
     } else {
         printf("Error: Malformed expression.\n");
     }
+    return false;
 }
 
 bool Ep(){
-    cout << "Entering Ep" << endl;
+    //cout << "Entering Ep" << endl;
     char* eq_memo = eq_ptr;
     int right_op, left_op;
     if(currtoken.type != RPAREN){
-        T();
+        if(T()) return true;
     } else {
         getToken();
     }
@@ -126,7 +127,7 @@ bool Ep(){
     ++top;
     *ops_ptr = '+';
     ++ops_ptr;
-    cout << left_op << "+" << right_op << ": " << left_op + right_op << endl;
+    //cout << left_op << "+" << right_op << ": " << left_op + right_op << endl;
     if(currtoken.type == EOEQ){
         if(left_op + right_op == result) return true;
     } else {
@@ -140,7 +141,7 @@ bool Ep(){
     ++ops_ptr;
     eq_ptr = eq_memo;
     getToken();
-    cout << left_op << "-" << right_op << ": " << left_op - right_op << endl;
+    //cout << left_op << "-" << right_op << ": " << left_op - right_op << endl;
     if(currtoken.type == EOEQ){
         if(left_op - right_op == result) return true;
     } else {
@@ -154,7 +155,7 @@ bool Ep(){
     ++ops_ptr;
     eq_ptr = eq_memo;
     getToken();
-    cout << left_op << "*" << right_op << ": " << left_op * right_op << endl;
+    //cout << left_op << "*" << right_op << ": " << left_op * right_op << endl;
     if(currtoken.type == EOEQ){
         if(left_op * right_op == result) return true;
     } else {
@@ -164,7 +165,7 @@ bool Ep(){
     --ops_ptr;
     --top;
     *top = left_op;
-    cout << "*top: " << *top << endl;
+    //cout << "*top: " << *top << endl;
     ++top;
     ++top;
     return false;
@@ -172,7 +173,7 @@ bool Ep(){
 
 int main(){
 
-    while(scanf("%[^\n]", equation)){
+    while(scanf("%[^\n]\n", equation)){
         if(equation[1] == '\0') return 0;
         eq_ptr = equation;
         S();
