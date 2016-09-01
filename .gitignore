@@ -3,4 +3,5 @@
 *.*~
 *.swap
 *.out
+*.class
 .DS_Store
