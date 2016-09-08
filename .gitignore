@@ -2,6 +2,7 @@
 *.obj
 *.*~
 *.swap
+*.swp
 *.out
 *.class
 .DS_Store

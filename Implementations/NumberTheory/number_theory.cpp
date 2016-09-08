@@ -32,6 +32,14 @@ bool isPrime(ll N){
 	return true; // only works for N <= (last prime in primes)^2
 }
 
+int gcd(int a, int b){
+    return ((b == 0) ? a : gcd(b,a%b));
+}
+
+int lcm(int a, int b){
+    return a * (b / gcd(a,b));
+}
+
 int main(){
 	sieve(10000000);
 	printf("%d\n", isPrime(2147483647)); // 10-digits prime
