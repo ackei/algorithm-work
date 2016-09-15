@@ -32,6 +32,20 @@ bool isPrime(ll N){
 	return true; // only works for N <= (last prime in primes)^2
 }
 
+vi primeFactors(ll N){
+    vi factors;
+    ll PF_idx = 0, PF = primes[PF_idx];
+    while (PF * PF <= N){
+        while (N % PF == 0){
+            N /= PF;
+            factors.push_back(PF);
+        }
+        PF = primes[++PF_idx];
+    }
+
+    return factors;
+}
+
 int gcd(int a, int b){
     return ((b == 0) ? a : gcd(b,a%b));
 }
