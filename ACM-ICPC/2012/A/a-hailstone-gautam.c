@@ -1,4 +1,4 @@
-// Untested - Produced Output for input.in
+// Tested with input.in and matched solution with a-judge.c 
 #include <stdio.h>
 
 int main() {
