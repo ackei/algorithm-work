@@ -4,7 +4,12 @@
 #include <cstring>
 using namespace std;
 
-void parse(unsigned char* mem, size_t& pointer,  )
+void parse(unsigned char* mem, size_t& pointer, string& line, int& sqbrck, string& output) {
+
+	
+
+}
+
 
 
 int main() {
@@ -22,7 +27,7 @@ int main() {
 		unsigned char mem[1 << 14];
 		memset((void *)mem, 0, 1 << 14);
 		size_t pointer = 0;
-		sqbrck = 0;
+		int sqbrck = 0;
 		string output;
 		
 		line = "";
