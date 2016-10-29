@@ -1,17 +1,17 @@
-def cyclic(line):
+def cyclic_int(line):
+
     iscyclic = True
-    str_tmp = "{{:.{0}f}}".format(len(line))
-    dbl = float(line) / 10**len(line)
+    nbr = int(line)
     for i in range(2, len(line)+1):
-        nx_dbl = i*dbl
-        str_nxdbl = str_tmp.format(nx_dbl)
-        if nx_dbl < 1.0:
-            str_nxdbl = str_nxdbl[2:2+len(line)]
-        else:
-            str_nxdbl = str_nxdbl.replace(".", "")[:len(line)]
-        if not line in str_nxdbl + str_nxdbl:
-            #import pdb; pdb.set_trace()
+        nx_nbr = i*nbr
+        str_nx_nbr = str(nx_nbr)
+        str_nx_nbr = str_nx_nbr[:len(line)]
+        if not line in str_nx_nbr + str_nx_nbr:
             iscyclic = False
+        str_nx_nbr = str(nx_nbr)
+        str_nx_nbr = "0" + str_nx_nbr[:len(line)-1]
+        if line in str_nx_nbr + str_nx_nbr:
+            iscyclic = True
     else:
         if iscyclic:
             print(line, "is cyclic")
@@ -24,7 +24,7 @@ def main():
         lines = fh.readlines()
 
     for line in lines:
-        cyclic(line.strip())
+        cyclic_int(line.strip())
 
 if __name__ == "__main__":
     main()
